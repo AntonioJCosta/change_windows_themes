@@ -17,7 +17,8 @@ class ChangeWindowsThemes:
         return None
 
     def _change_windows_theme(self) -> None:
-        color = 0 if self._current_hour >= 18 else 1
+        # Dark theme from 6 PM to 6 AM, and light theme from 6 AM to 6 PM
+        color = 0 if self._current_hour >= 18 or self._current_hour < 6 else 1
         command = f'powershell.exe -Command "New-ItemProperty -Path HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize -Name AppsUseLightTheme -Value {color} -PropertyType DWord -Force"'
         logger.info(f"Executing command: {command}")
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -31,7 +32,8 @@ class ChangeWindowsThemes:
         return None
 
     def _change_vscode_theme(self) -> None:
-        theme = "Default Dark+" if self._current_hour >= 18 else "Material Theme Lighter"
+        # Dark theme from 6 PM to 6 AM, and light theme from 6 AM to 6 PM
+        theme = "Default Dark+" if self._current_hour >= 18 or self._current_hour < 6 else "Material Theme Lighter"
         vscode_settings_path = env.VSCODE_SETTINGS_PATH
         if not os.path.exists(vscode_settings_path):
             logger.error("VSCode settings.json file not found")
